@@ -13,19 +13,23 @@ func main() {
 
     client := http.Client{}
 
-    f, error := excelize.OpenFile("file.xlsx")
+    f, error := excelize.OpenFile("file1.xlsx")
     if error != nil {
         log.Fatal(error)
     }
     columnName := "B"
     sheetName := "patent"
-    totalNumberOfRows := 5
+    totalNumberOfRows := 6
 
     for i := 2; i < totalNumberOfRows; i++ {
         cellName := fmt.Sprintf("%s%d", columnName, i)
 	fmt.Printf(cellName + ":")
         cellValue, _ := f.GetCellValue(sheetName, cellName)
         fmt.Println(cellValue)
+	if len(cellValue) == 0 {
+	    fmt.Println("Patent number is null..skip")
+	    continue
+        }
 
     var url = "https://patentcenter.uspto.gov/retrieval/public/v2/application/data?patentNumber=" + cellValue
     fmt.Println("URL: ", url)
