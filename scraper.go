@@ -2,33 +2,33 @@ package main
     
 import (
     "fmt"
+    "log"
     "io/ioutil"
     "strings"
     "net/http"
+    "github.com/xuri/excelize/v2"
 )
 
 func main() {
 
-    for row := 1; row <= 100; row++ {
-    }
+    client := http.Client{}
 
-    file, error := excelize.OpenFile("test-file.xlsx")
-    if erro != nil {
+    f, error := excelize.OpenFile("file.xlsx")
+    if error != nil {
         log.Fatal(error)
     }
     columnName := "B"
     sheetName := "patent"
-    totalNumberOfRows := 2
+    totalNumberOfRows := 5
 
-    for i := 1; i < totalNumberOfRows; i++ {
+    for i := 2; i < totalNumberOfRows; i++ {
         cellName := fmt.Sprintf("%s%d", columnName, i)
-        fmt.Println(cellName)
-        cellValue, err := f.GetCellValue(sheetName, cellName)
-        fmt.Printf("%s\t", cellValue)
-    }
+	fmt.Printf(cellName + ":")
+        cellValue, _ := f.GetCellValue(sheetName, cellName)
+        fmt.Println(cellValue)
 
-    client := http.Client{}
-    var url = "https://patentcenter.uspto.gov/retrieval/public/v2/application/data?patentNumber=11769002"
+    var url = "https://patentcenter.uspto.gov/retrieval/public/v2/application/data?patentNumber=" + cellValue
+    fmt.Println("URL: ", url)
     req , err := http.NewRequest("GET", url, nil)
     if err != nil {
         //Handle Error
@@ -56,16 +56,14 @@ func main() {
 
     resp , err := client.Do(req)
     if err != nil {
-        //Handle Error
 	fmt.Println("Err:", err)
     }
 
     defer resp.Body.Close()
-
     fmt.Println("Response status:", resp.Status)
     b, err := ioutil.ReadAll(resp.Body)
-
     processOutput(string(b))
+    } // end for loop
 }
 
 
@@ -77,8 +75,8 @@ func processOutput (resp string) {
         return
     }
     skip := s+len("applicationConfirmationNumber") + 3
-    fmt.Println("String found at index: ", s)
-    fmt.Println("skipping: ", skip)
+    //fmt.Println("String found at index: ", s)
+    //fmt.Println("skipping: ", skip)
     newStringPtr := resp[skip:]
     //fmt.Println("New String: ", newStringPtr)
     s1 := strings.Index(newStringPtr, "\"")
