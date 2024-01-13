@@ -66,17 +66,29 @@ func main() {
     defer resp.Body.Close()
     fmt.Println("Response status:", resp.Status)
     b, err := ioutil.ReadAll(resp.Body)
-    processOutput(string(b))
+    final := processOutput(string(b))
+    if final == "error" {
+	fmt.Println("Err:", err)
+	continue
+    }
+
+    writeCell := fmt.Sprintf("%s%d", "C", i)
+    err = f.SetCellValue(sheetName, writeCell, final)
     } // end for loop
+
+    err := f.Save()
+    if err != nil {
+        fmt.Println(err)
+    }
 }
 
 
 
-func processOutput (resp string) {
+func processOutput (resp string) string {
 
     s := strings.Index(resp, "applicationConfirmationNumber")
     if s == -1 {
-        return
+        return "error" 
     }
     skip := s+len("applicationConfirmationNumber") + 3
     //fmt.Println("String found at index: ", s)
@@ -86,4 +98,5 @@ func processOutput (resp string) {
     s1 := strings.Index(newStringPtr, "\"")
     final := newStringPtr[:s1]
     fmt.Println("Value: ", final)
+    return final
 }
