@@ -13,13 +13,13 @@ func main() {
 
     client := http.Client{}
 
-    f, error := excelize.OpenFile("file1.xlsx")
+    f, error := excelize.OpenFile("file.xlsx")
     if error != nil {
         log.Fatal(error)
     }
     columnName := "B"
     sheetName := "patent"
-    totalNumberOfRows := 6
+    totalNumberOfRows := 20
 
     for i := 2; i < totalNumberOfRows; i++ {
         cellName := fmt.Sprintf("%s%d", columnName, i)
