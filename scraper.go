@@ -70,6 +70,11 @@ func main() {
 
     defer resp.Body.Close()
     fmt.Println("Response status:", resp.Status)
+    if resp.Status == "429" {
+        fmt.Println("Sleep extra 5 seconds")
+        time.Sleep(5 * time.Second)
+	continue
+    }
     b, err := ioutil.ReadAll(resp.Body)
     final := processOutput(string(b))
     if final == "error" {
@@ -80,12 +85,12 @@ func main() {
     writeCell := fmt.Sprintf("%s%d", "C", i)
     err = f.SetCellValue(sheetName, writeCell, final)
 
-    } // end for loop
-
-    err := f.Save()
+    err = f.Save()
     if err != nil {
         fmt.Println(err)
     }
+
+    } // end for loop
 }
 
 
