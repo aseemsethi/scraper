@@ -65,7 +65,7 @@ func main() {
 
     resp , err := client.Do(req)
     if err != nil {
-	fmt.Println("Err:", err)
+	fmt.Println("Do Err:", err)
         fmt.Println("Response status: sleep extra 5 sec", resp.Status)
         time.Sleep(5 * time.Second)
         continue
@@ -75,7 +75,7 @@ func main() {
     b, err := ioutil.ReadAll(resp.Body)
     final := processOutput(string(b))
     if final == "error" {
-	fmt.Println("Err:", err)
+	fmt.Println("Process Err:", err)
 	continue
     }
 
@@ -84,6 +84,7 @@ func main() {
 
     err = f.Save()
     if err != nil {
+	fmt.Println("Save Err:", err)
         fmt.Println(err)
     }
 
@@ -96,7 +97,7 @@ func processOutput (resp string) string {
 
     s := strings.Index(resp, "applicationConfirmationNumber")
     if s == -1 {
-        return "error" 
+        return "Search error" 
     }
     skip := s+len("applicationConfirmationNumber") + 3
     //fmt.Println("String found at index: ", s)
