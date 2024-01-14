@@ -19,11 +19,11 @@ func main() {
     }
     columnName := "B"
     sheetName := "patent"
-    totalNumberOfRows := 20
+    totalNumberOfRows := 100
 
     for i := 2; i < totalNumberOfRows; i++ {
         if i % 3 == 0 {
-	    fmt.Println("Sleeping extra 5 seconds")
+	    fmt.Println("Sleeping extra 10 seconds")
 	    time.Sleep(10 * time.Second)
         }
         client := http.Client{}
@@ -104,6 +104,6 @@ func processOutput (resp string) string {
     s1 := strings.Index(newStringPtr, "\"")
     final := newStringPtr[:s1]
     fmt.Println("Value: ", final)
-    time.Sleep(3 * time.Second)
+    time.Sleep(4 * time.Second)
     return final
 }
