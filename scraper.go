@@ -2,6 +2,7 @@ package main
     
 import (
     "fmt"
+    "time"
     "log"
     "io/ioutil"
     "strings"
@@ -11,7 +12,6 @@ import (
 
 func main() {
 
-    client := http.Client{}
 
     f, error := excelize.OpenFile("file.xlsx")
     if error != nil {
@@ -22,6 +22,11 @@ func main() {
     totalNumberOfRows := 20
 
     for i := 2; i < totalNumberOfRows; i++ {
+        if i % 3 == 0 {
+	    fmt.Println("Sleeping extra 5 seconds")
+	    time.Sleep(7 * time.Second)
+        }
+        client := http.Client{}
         cellName := fmt.Sprintf("%s%d", columnName, i)
 	fmt.Printf(cellName + ":")
         cellValue, _ := f.GetCellValue(sheetName, cellName)
@@ -74,6 +79,7 @@ func main() {
 
     writeCell := fmt.Sprintf("%s%d", "C", i)
     err = f.SetCellValue(sheetName, writeCell, final)
+
     } // end for loop
 
     err := f.Save()
@@ -98,5 +104,6 @@ func processOutput (resp string) string {
     s1 := strings.Index(newStringPtr, "\"")
     final := newStringPtr[:s1]
     fmt.Println("Value: ", final)
+    time.Sleep(3 * time.Second)
     return final
 }
