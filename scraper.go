@@ -24,7 +24,7 @@ func main() {
     for i := 2; i < totalNumberOfRows; i++ {
         if i % 3 == 0 {
 	    fmt.Println("Sleeping extra 5 seconds")
-	    time.Sleep(7 * time.Second)
+	    time.Sleep(10 * time.Second)
         }
         client := http.Client{}
         cellName := fmt.Sprintf("%s%d", columnName, i)
