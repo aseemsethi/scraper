@@ -66,15 +66,12 @@ func main() {
     resp , err := client.Do(req)
     if err != nil {
 	fmt.Println("Err:", err)
+        fmt.Println("Response status: sleep extra 5 sec", resp.Status)
+        time.Sleep(5 * time.Second)
+        continue
     }
 
     defer resp.Body.Close()
-    fmt.Println("Response status:", resp.Status)
-    if resp.Status == "429" {
-        fmt.Println("Sleep extra 5 seconds")
-        time.Sleep(5 * time.Second)
-	continue
-    }
     b, err := ioutil.ReadAll(resp.Body)
     final := processOutput(string(b))
     if final == "error" {
